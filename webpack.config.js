@@ -1,14 +1,14 @@
 const path = require('path');
 const HtmlWebpackPlugin = require('html-webpack-plugin');
 const ReactRefreshWebpackPlugin = require('@pmmmwh/react-refresh-webpack-plugin');
+const webpack = require('webpack')
 
 const isDevelopment = process.env.NODE_ENV !== 'production';
 
 module.exports = {
-
   // webpack will take the files from ./src/index
   entry: {
-		bundle: './src/index',
+		main: './src/index',
 		'editor.worker': 'monaco-editor/esm/vs/editor/editor.worker.js',
 		'json.worker': 'monaco-editor/esm/vs/language/json/json.worker',
 		'css.worker': 'monaco-editor/esm/vs/language/css/css.worker',
@@ -41,7 +41,6 @@ module.exports = {
 						loader: require.resolve('babel-loader'),
 						options: {
 							presets: ['@babel/preset-env', '@babel/preset-typescript', '@babel/preset-react'],
-							plugins: [isDevelopment && require.resolve('react-refresh/babel')].filter(Boolean)
 						}
 					}
 				]
@@ -61,6 +60,5 @@ module.exports = {
     new HtmlWebpackPlugin({
       template: './src/index.html'
     }),
-		isDevelopment && new ReactRefreshWebpackPlugin()
-  ]
+  ].filter(Boolean)
 };
