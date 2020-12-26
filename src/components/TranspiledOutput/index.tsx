@@ -1,5 +1,6 @@
 import React from 'react';
 import { FC } from 'react';
+import { Codeblock } from '../styles';
 
 interface TranspiledOutputProps {
   readonly transpiledCode: string;
@@ -8,7 +9,7 @@ interface TranspiledOutputProps {
 export const TranspiledOutput: FC<TranspiledOutputProps> = ({
   transpiledCode,
 }) => {
-  return <pre>
+  return <Codeblock>
     {transpiledCode}
-  </pre>
+  </Codeblock>
 }

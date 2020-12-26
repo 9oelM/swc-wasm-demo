@@ -1,26 +1,45 @@
-import * as SWC from '@swc/wasm-web';
-import React, { ChangeEventHandler } from 'react';
-import { FC } from 'react';
-import { UpdateLiveCode } from '../types';
-
+import React, { ReactNode, useCallback, useMemo, useState } from 'react';
+import { FC, useRef, useEffect, ChangeEventHandler } from 'react';
+import { importSwcWasm } from '../misc/util';
+import { MonacoEditor, MonacoEditorProps } from '../MonacoEditor';
+import { SwcWasm } from '../types';
 interface LiveEditorProps {
-  updateLiveCode: UpdateLiveCode;
+  updateLiveCode: (nextCode: string) => void;
 }
+
 
 export const LiveEditor: FC<LiveEditorProps> = ({
   updateLiveCode,
 }) => {
-  const handleTextAreaChange: ChangeEventHandler<HTMLTextAreaElement> = (e) => {
-    const result = SWC.transformSync(e.target.value, {})
-    console.log(result)
-    updateLiveCode(result)
-  }
+  const swcWasm = useRef<SwcWasm | null>(null);
+  const [isSwcWasmLoading, setSwcWasmLoading] = useState(true);
 
-  return <textarea 
+  useEffect(() => {
+    (async () => {
+      const wasm: SwcWasm = await importSwcWasm();
 
-    onChange={handleTextAreaChange}
-  >
-    
-  </textarea>
+      swcWasm.current = wasm;
+      setSwcWasmLoading(false);
+    })()
+  }, [])
+
+  const handleTextAreaChange: MonacoEditorProps['onLiveCodeChange'] = useCallback((nextCode) => {
+    try {
+      if (!swcWasm.current) return;
+      const { transformSync } = swcWasm.current;
+
+      updateLiveCode(transformSync(nextCode, {}).code)
+    } catch (e) {
+      console.error(e)
+    }
+  }, [updateLiveCode])
+
+  const loadingUIOrEditor: ReactNode =
+    useMemo(() => 
+      isSwcWasmLoading ? 
+        'loading...' : 
+        <MonacoEditor onLiveCodeChange={handleTextAreaChange} />, [isSwcWasmLoading]
+    )
+
+  return <>{loadingUIOrEditor}</>;
 }
-

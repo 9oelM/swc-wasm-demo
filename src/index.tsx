@@ -3,7 +3,9 @@ import React from 'react'
 import ReactDOM from 'react-dom'
 import { App } from './components/App';
 
-console.log('Hello from tsx!')
+import "regenerator-runtime/runtime.js";
+import 'normalize.css'
+import './index.css'
 
 ReactDOM.render(
   <App />,

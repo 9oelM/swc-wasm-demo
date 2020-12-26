@@ -1,0 +1,24 @@
+{
+  "name": "@swc/wasm",
+  "collaborators": [
+    "강동윤 <kdy1997.dev@gmail.com>"
+  ],
+  "type": "module",
+  "description": "wasm module for swc",
+  "version": "1.2.41",
+  "license": "Apache-2.0/MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/swc-project/swc.git"
+  },
+  "files": [
+    "wasm_bg.wasm",
+    "wasm.js",
+    "wasm.d.ts",
+    "wasm_bg.wasm.d.ts",
+    "wasm_bg.js"
+  ],
+  "module": "wasm.js",
+  "types": "wasm.d.ts",
+  "sideEffects": false
+}
